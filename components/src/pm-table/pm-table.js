@@ -1,8 +1,5 @@
 import {registerActionListener, deepCopy} from "../utils.js";
 
-const sheet = new CSSStyleSheet();
-sheet.replaceSync(`${pmLoadCSS}`);
-
 class TableList extends HTMLElement {
   constructor() {
     super();
@@ -18,12 +15,6 @@ class TableList extends HTMLElement {
     this.scrollLoadPercentage = 0.8;
     this.defaultRowAttributes = {"data-key-down": "next-sibling", 
                                  "data-key-up": "previouse-sibling" };
-
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.innerHTML = `
-      ${pmLoadHTML}
-    `;
-    this.shadowRoot.adoptedStyleSheets = [sheet];
   }
 
   connectedCallback()
@@ -34,7 +25,9 @@ class TableList extends HTMLElement {
     this.sort = this._setSort(itemTemplate.getAttribute("sort"));
     this.subSort = this._setSort(subItemTemplate.getAttribute("sort"));
 
-    this.listElem = this.shadowRoot.querySelector("ul");
+    this.listElem = document.createElement("ul");
+    this.listElem.classList.add("tableList");
+    this.appendChild(this.listElem);
     this.listElem.addEventListener("scroll", this._onScroll.bind(this), false);
 
     this.listElem.addEventListener("keydown", function(ev)
@@ -255,7 +248,7 @@ class TableList extends HTMLElement {
     if (!itemElem)
       return;
 
-    if (itemElem.isSameNode(this.shadowRoot.activeElement))
+    if (itemElem.isSameNode(document.activeElement))
       this.selectItem(id, null, "next");
     this.listElem.removeChild(itemElem);
     this.loaded--;
@@ -272,7 +265,7 @@ class TableList extends HTMLElement {
     if (!itemElem)
       return;
 
-    const activeElement = this.shadowRoot.activeElement;
+    const activeElement = document.activeElement;
     if (activeElement.isSameNode(itemElem))
       this.selectItem(id, parentId, "next");
 
@@ -539,7 +532,7 @@ class TableList extends HTMLElement {
 
   _getActiveElement()
   {
-    return this.shadowRoot.activeElement;
+    return document.activeElement;
   }
 
   /**

@@ -52,10 +52,10 @@ function getItemElemIndex(id, parentId)
 
 function getSelectedDatasetId()
 {
-  return page.evaluate((tableListHandle) =>
+  return page.evaluate(() =>
   {
-    return tableListHandle.shadowRoot.activeElement.dataset.id;
-  }, tableListHandle);
+    return document.activeElement.dataset.id;
+  });
 }
 
 function updateSortAndReAdd(sort, sortSub)
@@ -81,7 +81,7 @@ function updateSortAndReAdd(sort, sortSub)
 function getLoadedAmount(id)
 {
   return page.evaluate((tableListHandle, id) => {
-    let elements = tableListHandle.shadowRoot.querySelector("ul").children;
+    let elements = tableListHandle.querySelector("ul").children;
     if (id)
     {
       const index = tableListHandle.getItemIndex(id);
